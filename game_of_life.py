@@ -10,7 +10,7 @@ from rule import Rule
 from automata import Automata
 
 
-gol = Automata([50,50], [0,1])
+gol = Automata([300,300], [0,1])
 
 gol.addRule(Rule(0,1,1,[3]))
 gol.addRule(Rule(1,0,1,[0,1]))
@@ -23,8 +23,9 @@ gol.randomise()
 gol.show()
 
 
-for ii in range(0,10):
+for ii in range(0,100):
     
     gol.evolve()
-    gol.show()
+    gol.show(str(ii))
+    
     

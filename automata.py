@@ -14,7 +14,8 @@ class Automata:
     layout = []
     states = []
     _figHandle = None;
-    _axHandle = None;
+    _imHandle = None;
+    
     nhood = np.array([[1,1,1],[1,0,1],[1,1,1]])
     
     def __init__(self, size, states):
@@ -34,17 +35,16 @@ class Automata:
         #print(newState)
         self.layout = newState
     
-    def show(self):
+    def show(self, label =''):
         clims = (min(self.states), max(self.states))
         
         if self._figHandle == None:
-            self._figHandle = plt.figure()
-            self._axHandle = plt.pcolor(self.layout, cmap="gray", clim=clims, animated=True)
+            self._figHandle = plt.figure(1)
+            self._imHandle = plt.imshow(self.layout, cmap="gray", clim=clims, animated=True, interpolation='none')
         else:
             plt.figure(self._figHandle.number)
-                        
-        plt.clf
-        plt.pcolor(self.layout, cmap="gray", clim=clims)
+            self._imHandle.set_array(self.layout)            
+        plt.title(label)
         plt.draw()
         plt.pause(0.001)
         

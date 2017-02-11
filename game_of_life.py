@@ -6,8 +6,8 @@ Created on Tue Feb  7 15:40:08 2017
 @author: user
 """
 
-from rule import Rule
-from automata import Automata
+from automata.rule import Rule
+from automata.automata import Automata
 
 
 gol = Automata([300,300], [0,1])

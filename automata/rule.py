@@ -9,12 +9,6 @@ from scipy import signal
 import numpy as np
 
 class Rule:
-    stateFrom = []
-    stateTo = []
-    stateNbours = [];
-    Nneighbours = 0;
-    prob = -1;
-    
     
     def __init__(self, sFrom, sTo, snb, N, prob=1):
         self.stateFrom = sFrom

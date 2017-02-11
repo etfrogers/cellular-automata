@@ -10,17 +10,17 @@ import matplotlib.pyplot as plt
 
 plt.ion()
 class Automata:
-    rules = []
-    layout = []
-    states = []
-    _figHandle = None;
-    _imHandle = None;
     
+    #variables defined here at static
     nhood = np.array([[1,1,1],[1,0,1],[1,1,1]])
     
     def __init__(self, size, states):
+        #variables defined here are instance variables
         self.layout = np.zeros(size)
         self.states = states
+        self.rules = []
+        self._figHandle = None
+        self._imHandle = None
         
     def addRule(self, rule):
         self.rules.append(rule)

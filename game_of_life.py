@@ -23,7 +23,7 @@ gol.randomise()
 gol.show()
 
 
-for ii in range(0,100):
+for ii in range(0,50):
     
     gol.evolve()
     gol.show(str(ii))

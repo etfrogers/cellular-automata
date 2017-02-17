@@ -16,7 +16,8 @@ class Automata:
     
     def __init__(self, size, states):
         #variables defined here are instance variables
-        self.layout = np.zeros(size)
+        assert(len(size) == 2) #only implmented 2d automata
+        self.layout = np.zeros(size) + states[0]
         self.states = states
         self.rules = []
         self._figHandle = None

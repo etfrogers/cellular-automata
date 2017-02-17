@@ -18,8 +18,7 @@ class Rule:
             _ = [a for a in sNb]
             self.stateNbours = sNb
         except TypeError:
-            self.stateNbours = [sNb]
-            
+            self.stateNbours = [sNb]            
         #assert(len(N) == 1 or len(N) == 2)
         self.Nneighbours = N
         

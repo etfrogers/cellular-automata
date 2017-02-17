@@ -1,6 +1,11 @@
 from automata.rule import Rule
 from automata.automata import Automata
 from math import pi, exp
+from dlmread import readnfile
+import numpy as np
+from scipy import interpolate
+import cmath
+
 #translation of etr_gaus_rect_borde_unifor_deca_rais_9
 
 lattice=0.55*1e-9;   abp2=0.5; absorb=0.5;   KB=1.38078*1e-23; h=6.6260693*1e-34; c=3*1e8;   #surface melting thickness denote the initial temperature
@@ -38,39 +43,50 @@ N1212=1;    #from ground to meta with propability when N2121<Neibour <detN21(tha
 detN13=4;    ## onset from ground to excited with Neibour >detN13
 N21=7;  # end from meta to ground when with chnage probability Decay21 when Neibour <N21
 
-if strcmp(pulse_wave, 'gauss_Y'):
+if (pulse_wave == 'gauss_Y'):
     gao=1
-if strcmp(pulse_wave, 'gauss_N'):
+elif (pulse_wave == 'gauss_N'):
     gao=0
-
-if strcmp(time_domain, 'gaussTY'):
+else:
+    raise Exception
+    
+if (time_domain == 'gaussTY'):
     tim=1 
     Ontime=2*Tao
     power=0.9394*fluence/tao
     
-if strcmp(time_domain, 'gaussTN'):
+elif (time_domain == 'gaussTN'):
     tim=0  
     Ontime=Tao
     power=1*fluence/tao
-
-if strcmp(raise_style, 'uniformY'):
+else:
+    raise Exception
+if (raise_style == 'uniformY'):
     rai=0
-if strcmp(raise_style, 'uniformN'):
+elif (raise_style == 'uniformN'):
     rai=1 #tim=0(1) denotes rectangular pulse(gauss pulse); gao=1,0 is gauss shape or#rectangular shap;#rai=0(1) denotes the rasi12 is constant or exponentially decrease;
+else:
+    raise Exception
 
-N0=power/h/f0*timestep*(lattice)^2 #general photonic number per timestep at a certain row i
+N0=power/h/f0*timestep*(lattice)**2 #general photonic number per timestep at a certain row i
 
-#nrload = dlmread('n_poly.txt','\t');krload = dlmread('k_poly.txt','\t');   # Load Ga refractive indices and select at relevant wavelength
-#nSol = interp1(nrload(:,1),nrload(:,2),lam,'pchip','extrap')+1i*interp1(krload(:,1),krload(:,2),lam,'pchip','extrap');
-#nrload2 = dlmread('n_liq.txt','\t');krload2 = dlmread('k_liq.txt','\t');
-#nLiq = interp1(nrload2(:,1),nrload2(:,2),lam,'pchip','extrap')+1i*interp1(krload2(:,1),krload2(:,2),lam,'pchip','extrap');
-#es = nSol*nSol;    el =nLiq*nLiq;   ks=nSol*2*pi*f0/c;  kl=nLiq*2*pi*f0/c; Ls=1/imag(ks);   LL=1/imag(kl);  #pennetration depth come from the wave vector
-#abp1=2*lattice/Ls;# cell absorption rate for a photon
+
+nrload = readnfile('n_poly.txt','\t');krload = readnfile('k_poly.txt','\t');   # Load Ga refractive indices and select at relevant wavelength
+nSol = np.interp(lam, nrload[:,0],nrload[:,1]) + 1j*np.interp(lam, krload[:,0],krload[:,1])
+nrload2 = readnfile('n_liq.txt','\t');krload2 = readnfile('k_liq.txt','\t');
+nLiq = np.interp(lam, nrload2[:,0],nrload2[:,1]) + 1j*np.interp(lam, krload2[:,0],krload2[:,1])
+es = nSol*nSol;    el =nLiq*nLiq;   ks=nSol*2*pi*f0/c;  kl=nLiq*2*pi*f0/c; Ls=1/np.imag(ks);   LL=1/np.imag(kl);  #pennetration depth come from the wave vector
+abp1=2*lattice/Ls;# cell absorption rate for a photon
 #
-#if strcmp(absorption_style, 'small')
-#    abp=abp1;end
-#if strcmp(absorption_style, 'biger')
-#    abp=abp2;end
+if (absorption_style == 'small'):
+    abp=abp1
+elif (absorption_style == 'biger'):
+    abp=abp2
+else:
+    raise Exception
+
+
+aut = Automata([m,n], [ground, meta, excited])
 #
 #figure(1)
 #plotbutton=uicontrol('style','pushbutton','string','Run','fontsize',12, 'position',[100,400,50,20], 'callback', 'run=1;'); #define the run,stop,quit and number button
@@ -78,14 +94,31 @@ N0=power/h/f0*timestep*(lattice)^2 #general photonic number per timestep at a ce
 #quitbutton=uicontrol('style','pushbutton','string','Quit','fontsize',12,'position',[300,400,50,20],'callback','stop=1;close;');
 #number1 = uicontrol('style','text', 'string','1', 'fontsize',12,'position',[20,400,50,20]);##[75,368,50,20]);
 #
-#cells= zeros(m,n);    cells(1:m,1:n1) = meta;    cells(1,1) = excited; cells(1:m,n1+1:n) = ground;  # initial state for the matrix and draw
+#cells= zeros(m,n);    
+aut.layout[0:m,0:n1] = meta
+aut.layout[0,0] = excited
+#aut.layout[1:m,n1+1:n] = ground;  # initial state for the matrix and draw
+
+aut.show('Initial State')
+
+aut.addRule(Rule(sFrom=[meta],sTo=ground,sNb=[meta,excited],N=[0, detN21],prob=decay2121))
+
 #imagesc(cells); xlabel('Cells','fontsize',13),ylabel('Cells','fontsize',13);set(gca,'FontSize',12);
-#stop= 0; run = 0; freeze = 0; k=1; auxiliar=0;
-#run = 1;
-#while (stop==0)########### main loop begin
-#    if (run==1)
+stop= 0; run = 0; freeze = 0; k=1; auxiliar=0;
+run = 1;
+stepNumber = 0;
+while (stop==0):########### main loop begin
+    stepNumber+=1
+    
+    aut.evolve()
+    aut.show(str(stepNumber))
+    stop=stepNumber>=20
+#    if (run==1) 
+    #labelling
 #        stepnumber = 1 + str2num(get(number1,'string'));# photonic excited at a certain matrix
 #        set(number1,'string',num2str(stepnumber)); a=stepnumber-1;
+#        
+    #Laser excitation 
 #        Nii(a)=N0*exp(-2.7726*tim*(timestep*a/tao-1)^2); 
 #        
 #        if(a>Ontime)
@@ -150,6 +183,7 @@ N0=power/h/f0*timestep*(lattice)^2 #general photonic number per timestep at a ce
 #            
 #            ####################################### below from meta to ground
 #            
+    #Rule(sFrom=meta,sTo=ground,sNb=[meta,excited],N=detN21,prob=decay2121)
 #            pro=rand(size(cells));
 #           
 #            wrapped_cells = [cells(m,:);cells;cells(1,:)]; #add wrapping (last line above first and first line below last)
@@ -461,7 +495,6 @@ N0=power/h/f0*timestep*(lattice)^2 #general photonic number per timestep at a ce
 #    
 #    # end
 #    
-#end
 #
 #
 #

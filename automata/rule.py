@@ -37,8 +37,7 @@ class Rule:
         #print(nbours)
         validInds = np.logical_and(nbours>=min(self.Nneighbours), nbours<=max(self.Nneighbours))
         validInds = np.logical_and(validInds, refState==self.stateFrom) 
-        if self.prob == 1:
-            newState[validInds] = self.stateTo
-        else:
-            raise NotImplementedError('Probability not yet implemented')
+        if self.prob < 1:            
+            validInds = np.logical_and(validInds, np.random.random(refState.shape) < self.prob) 
+        newState[validInds] = self.stateTo
         #print(newState)

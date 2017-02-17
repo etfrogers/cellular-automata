@@ -7,13 +7,19 @@ Created on Mon Feb  6 19:09:12 2017
 """
 from scipy import signal
 import numpy as np
+from functools import reduce
 
 class Rule:
     
-    def __init__(self, sFrom, sTo, snb, N, prob=1):
+    def __init__(self, sFrom, sTo, sNb, N, prob=1):
         self.stateFrom = sFrom
         self.stateTo = sTo
-        self.stateNbours = snb
+        try:
+            _ = [a for a in sNb]
+            self.stateNbours = sNb
+        except TypeError:
+            self.stateNbours = [sNb]
+            
         #assert(len(N) == 1 or len(N) == 2)
         self.Nneighbours = N
         
@@ -25,7 +31,7 @@ class Rule:
         # refState is the state of the layout at the start of the timestep and 
         # should be used to calculate which changes to make
         
-        fromVals = refState == self.stateNbours
+        fromVals = reduce(np.logical_or, [refState == st for st in self.stateNbours]) 
         nbours = signal.convolve(fromVals.astype(int), nhood, 'same')
         #print(refState)
         #print('neighouurs')

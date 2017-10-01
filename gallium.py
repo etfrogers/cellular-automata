@@ -9,18 +9,37 @@ import matplotlib.pyplot as plt
 
 #translation of etr_gaus_rect_borde_unifor_deca_rais_9
 
-lattice=0.55*1e-9;   abp2=0.5; absorb=0.5;   KB=1.38078*1e-23; h=6.6260693*1e-34; c=3*1e8;   #surface melting thickness denote the initial temperature
-fluence=20*1e1;    lam = 775e-9;     f0=c/lam;    w=2*pi*f0; # make sure the smae wavelengh in function_ab      #fluence J/m^2  &&&&&&&&&&&&&&&&
-timestep=1*1e-15;  tao=100*timestep;     Tao=tao/timestep;   #time step,    #pulse width tao
+lattice=0.55e-9;   
+abp2=0.5; 
+absorb=0.5;   
+KB=1.38078e-23; 
+h=6.6260693e-34; 
+c=3e8;   #surface melting thickness denote the initial temperature
+fluence=200;    
+lambda0 = 775e-9;     
+f0=c/lambda0;    
+w=2*pi*f0; # make sure the smae wavelengh in function_ab      #fluence J/m^2  &&&&&&&&&&&&&&&&
+timestep=1e-15;  
+tao=100e-15; #pulse length    
+#Tao=tao/timestep;
 
-taoend=100*1e-7;  tao32=1*1e-12;  tao2121=1*1e-9;  # after Taoend, then all the meta will decay to ground ,
-tao21=1000*1e-8;  Tao21=10*1e-9;   Taoend=taoend/timestep; #decay2121 isthe middle process decay , tao21 and Tao21 is the last decay process &&& Taoend >=ontime
-tao1212=1*1e-9;
-decay32=1-exp(-timestep/tao32);   decay2121=1-exp(-timestep/tao2121);    decay21=1-exp(-timestep/tao21);  Decay21=1-exp(-timestep/Tao21);
-Decay213=0.01;    N3decay=24;
+taoend=100e-7 # after Taoend, then all the meta will decay to ground 
+tao32=1e-12  
+tao2121=1e-9  #decay2121 isthe middle process decay 
+tao21=1000e-8  #tao21 and Tao21 is the last decay process
+Tao21=10e-9   #Taoend >=ontime
+Taoend=taoend/timestep
+tao1212=1*1e-9
+decay32=1-exp(-timestep/tao32)
+decay2121=1-exp(-timestep/tao2121)    
+decay21=1-exp(-timestep/tao21)
+Decay21=1-exp(-timestep/Tao21)
+Decay213=0.01    
+N3decay=24
 #Raise12=1-exp(-timestep/tao1212);
-Raise12=0.4*1e-4;
+Raise12=0.4e-4;
 raise12=Raise12;
+
 absorption_style='small';# 'small' or 'biger'
 pulse_wave='gauss_N';# 'gauss_Y'  or 'gauss_N'
 decay_style='border3';#  'borderY'  or 'borderN' 'bordern' last one relati to his neibour
@@ -29,7 +48,11 @@ raise_style='uniformY';# 'uniformY' or 'uniformN'
 reflectivity_style='averageN';# 'averageY' or 'averageN'  #averageN is simple mode just add the reflectiveity layer let it thickness is uniform
 DetN32='considerN';# 'considerY or 'considerN'; that is to say decay32 if it is dependent on the neighbour
 
-m=100;   n=101;   n1=4;   M=m/3;   excited=0.85;  meta=0.35;  ground=0; #M is the waist of the pulse
+m=100
+n=101   
+n1=4   
+M=m/3 #M is the waist of the pulse
+excited=0.85;  meta=0.35;  ground=0; 
 
 #[ mg, ng] = meshgrid(1:n,1:m);
 neighbourhood = [[1, 1, 1],
@@ -73,9 +96,9 @@ N0=power/h/f0*timestep*(lattice)**2 #general photonic number per timestep at a c
 
 
 nrload = readnfile('n_poly.txt','\t');krload = readnfile('k_poly.txt','\t');   # Load Ga refractive indices and select at relevant wavelength
-nSol = np.interp(lam, nrload[:,0],nrload[:,1]) + 1j*np.interp(lam, krload[:,0],krload[:,1])
+nSol = np.interp(lambda0, nrload[:,0],nrload[:,1]) + 1j*np.interp(lambda0, krload[:,0],krload[:,1])
 nrload2 = readnfile('n_liq.txt','\t');krload2 = readnfile('k_liq.txt','\t');
-nLiq = np.interp(lam, nrload2[:,0],nrload2[:,1]) + 1j*np.interp(lam, krload2[:,0],krload2[:,1])
+nLiq = np.interp(lambda0, nrload2[:,0],nrload2[:,1]) + 1j*np.interp(lambda0, krload2[:,0],krload2[:,1])
 es = nSol*nSol;    el =nLiq*nLiq;   ks=nSol*2*pi*f0/c;  kl=nLiq*2*pi*f0/c; Ls=1/np.imag(ks);   LL=1/np.imag(kl);  #pennetration depth come from the wave vector
 abp1=2*lattice/Ls;# cell absorption rate for a photon
 #
@@ -241,7 +264,7 @@ while (not stop):########### main loop begin
 #                    count00 = sum(excited_cells, 2);
 #                    Da=count00*lattice;
 #                    #function_Ab is not vectorised yet.
-#                    Ab = function_Ab(Da, lam, nSol, nLiq).';
+#                    Ab = function_Ab(Da, lambda0, nSol, nLiq).';
 #                                    end   ########### strcmp(reflectivity_style, 'averageN')
 #                
 #                

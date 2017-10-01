@@ -134,33 +134,31 @@ while (not stop):########### main loop begin
      
 #        
 #        
-#        ################### below from ground photoinduced to exicted
-#        m0=1:m;
-#        if (stepNumber == 0):
-#            Ni=LaserIntensity(a).*exp(-gao*(m0-m/2).^2./M.^2).* Ab;      
-#        else
-#            Ni=LaserIntensity(a).*exp(-gao*(m0-m/2).^2./M.^2)* absorb ;     
-#        end
-#        
-#        proo=rand(size(m0));  #####
-#        Ni(Ni<proo) = 0;
-#            
-#        Nz=fix(Ni);
-#        Nf=Ni-Nz;##specific photonic number per timestep at a certain row i
+     ################### below from ground photoinduced to exicted
+    m0 = np.array(range(0,m))
+    if (stepNumber == 0) and False:
+        Ni=LaserIntensity[stepNumber]*np.exp(-gao*(m0-m/2)**2./M**2)* Ab;      
+    else:
+        Ni=LaserIntensity[stepNumber]*np.exp(-gao*(m0-m/2)**2./M**2)* absorb ;     
+                
+    randProbs = np.random.random(m0.shape)  #####
+    Ni[Ni<randProbs] = 0
+        
+    Nz = np.fix(Ni)
+    Nf=Ni-Nz;##specific photonic number per timestep at a certain row i
 #            
 ##         if(Nf(m0)>0) #ths code is almost "if true" as (x-fix(x) >0) is almost always true
 ##             proo=rand();
 ##         end    
-#        proo=rand(size(m0));  #####
-#        Nz(Nf>proo) = Nz(Nf>proo) + 1;
-#        
-#        for n0=1:n-2 ## guarrentee the last colume has no excited state
-#            randno = rand(size(m0));
-#            prob_abs = 1-(1-abp).^Nz; #compound probability for Nz photons that at least one is absorbed
-#            excited_inds = (cells(:,n0)==ground).' & (prob_abs>randno);
-#            cells(excited_inds, n0) = excited;
-#            Nz(excited_inds) = Nz(excited_inds)-1;
-#        end
+    randProbs = np.random.random(m0.shape)  #####
+    Nz[Nf>randProbs] = Nz[Nf>randProbs] + 1;
+        
+    for n0 in range(0, n-1): ## guarrentee the last colume has no excited state
+        randno = np.random.random(m0.shape);
+        prob_abs = 1-(1-abp)**Nz; #compound probability for Nz photons that at least one is absorbed
+        excited_inds = np.logical_and((aut.layout[:,n0]==ground), (prob_abs>randno));
+        aut.layout[excited_inds, n0] = excited;
+        Nz[excited_inds] = Nz[excited_inds]-1;
 #        
 #        #####################################################################
 #        ###########################excited above

@@ -67,6 +67,7 @@ N1212=1;    #from ground to meta with propability when N2121<Neibour <detN21(tha
 detN13=4;    ## onset from ground to excited with Neibour >detN13
 N21=7;  # end from meta to ground when with chnage probability Decay21 when Neibour <N21
 
+# gao=1,0 is gauss shape or rectangular shape
 if (pulse_wave == 'gauss_Y'):
     gao=1
 elif (pulse_wave == 'gauss_N'):
@@ -74,21 +75,24 @@ elif (pulse_wave == 'gauss_N'):
 else:
     raise Exception
     
+#tim=0(1) denotes rectangular pulse(gauss pulse);    
 if (time_domain == 'gaussTY'):
     tim=1 
-    Ontime=2*Tao
+    Ontime=2*tao
     power=0.9394*fluence/tao
     
 elif (time_domain == 'gaussTN'):
     tim=0  
-    Ontime=Tao
+    Ontime=tao
     power=1*fluence/tao
 else:
     raise Exception
+    
+#rai=0(1) denotes the rasi12 is constant or exponentially decrease;    
 if (raise_style == 'uniformY'):
     rai=0
 elif (raise_style == 'uniformN'):
-    rai=1 #tim=0(1) denotes rectangular pulse(gauss pulse); gao=1,0 is gauss shape or#rectangular shap;#rai=0(1) denotes the rasi12 is constant or exponentially decrease;
+    rai=1  
 else:
     raise Exception
 
@@ -221,7 +225,7 @@ while (not stop):########### main loop begin
 #            
 #            
 #            
-#            
+#            #TODO change ontime to units of seconds below
 #            if (a<=Ontime)############ below is to get how many meta and get the T to decide the next Ab
 #                
 #                if strcmp(reflectivity_style, 'averageY')   #########

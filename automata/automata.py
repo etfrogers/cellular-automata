@@ -57,6 +57,10 @@ class Automata:
     @property 
     def maxNbours(self):
         return np.sum(np.sum(self.nhood))
+    @property 
+    def figHandle(self):
+        return self.figHandle
+    
 
     
     

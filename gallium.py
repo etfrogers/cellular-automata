@@ -101,7 +101,11 @@ aut.layout[0,0] = excited
 
 aut.show('Initial State')
 
-aut.addRule(Rule(sFrom=[meta],sTo=ground,sNb=[meta,excited],N=[0, detN21],prob=decay2121))
+#from meta to ground
+aut.addRule(Rule(sFrom=meta,sTo=ground,sNb=[meta,excited],N=[0, detN21],prob=decay2121))
+aut.addRule(Rule(sFrom=ground, sTo=meta, sNb=[meta,excited], N=[detN12,aut.maxNbours])) #always happens if enough neighbours
+aut.addRule(Rule(sFrom=ground, sTo=meta, sNb=[meta,excited], N=[N1212,detN12], prob=raise12)) #stocahstically happens if only some neighbours
+
 
 #imagesc(cells); xlabel('Cells','fontsize',13),ylabel('Cells','fontsize',13);set(gca,'FontSize',12);
 stop= 0; run = 0; freeze = 0; k=1; auxiliar=0;
@@ -197,19 +201,8 @@ while (stop==0):########### main loop begin
 #            ############################ from meta to ground above
 #            
 #
-#            ##########below ground to meta
-#            pro=rand(size(cells));
-#           
-#            wrapped_cells = [cells(m,:);cells;cells(1,:)]; #add wrapping (last line above first and first line below last)
-#            number = filter2(neighbourhood, (wrapped_cells == meta | wrapped_cells==excited));
-#            number = number(2:end-1,:); # cut off wrapped lines;
-#            
-#            switched_cells = (cells==ground & ...
-#                ((number>detN12) | (pro<raise12 & number<=detN12 & number>N1212)));####that's
-#                
-#            cells(switched_cells) = meta;
-#            
-#            ############################## above ground t0 meta
+    #Rule(sFrom=ground, sTo=meta, sNb=[meta,excited], N=detN12) #always happens if enough neighbours
+    #Rule(sFrom=ground, sTo=meta, sNb=[meta,excited], N=[N1212,detN12], prob=raise12) #stocahstically happens if only some neighbours
 #            
 #            
 #            

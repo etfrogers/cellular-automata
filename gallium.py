@@ -479,6 +479,7 @@ while (not stop):########### main loop begin
 #    # end
 #    
 plt.figure(2)
+plt.clf
 plt.plot(time, LaserIntensity)
 plt.show()
 

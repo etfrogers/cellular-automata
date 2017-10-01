@@ -191,22 +191,8 @@ while (not stop):########### main loop begin
 #                
 #            ########### excited decay to meta above
 #            
-#            ####################################### below from meta to ground
-#            
     #Rule(sFrom=meta,sTo=ground,sNb=[meta,excited],N=detN21,prob=decay2121)
-#            pro=rand(size(cells));
-#           
-#            wrapped_cells = [cells(m,:);cells;cells(1,:)]; #add wrapping (last line above first and first line below last)
-#            number = filter2(neighbourhood, (wrapped_cells == meta | wrapped_cells==excited));
-#            number = number(2:end-1,:); # cut off wrapped lines;
-#            
-#            switched_cells = (cells==meta & number<detN21 & pro<decay2121);####that's
-#                
-#            cells(switched_cells) = ground;
-#            
-#            ############################ from meta to ground above
-#            
-#
+
     #Rule(sFrom=ground, sTo=meta, sNb=[meta,excited], N=detN12) #always happens if enough neighbours
     #Rule(sFrom=ground, sTo=meta, sNb=[meta,excited], N=[N1212,detN12], prob=raise12) #stocahstically happens if only some neighbours
 #            

@@ -3,8 +3,9 @@ from automata.automata import Automata
 from math import pi, exp
 from dlmread import readnfile
 import numpy as np
-from scipy import interpolate
-import cmath
+import matplotlib.pyplot as plt
+#from scipy import interpolate
+#import cmath
 
 #translation of etr_gaus_rect_borde_unifor_deca_rais_9
 
@@ -106,24 +107,27 @@ aut.addRule(Rule(sFrom=meta,sTo=ground,sNb=[meta,excited],N=[0, detN21],prob=dec
 aut.addRule(Rule(sFrom=ground, sTo=meta, sNb=[meta,excited], N=[detN12,aut.maxNbours])) #always happens if enough neighbours
 aut.addRule(Rule(sFrom=ground, sTo=meta, sNb=[meta,excited], N=[N1212,detN12], prob=raise12)) #stocahstically happens if only some neighbours
 
+NSteps = 100
 
 #imagesc(cells); xlabel('Cells','fontsize',13),ylabel('Cells','fontsize',13);set(gca,'FontSize',12);
-stop= 0; run = 0; freeze = 0; k=1; auxiliar=0;
+stop = False; run = 0; freeze = 0; k=1; auxiliar=0;
 run = 1;
-stepNumber = 0;
-while (stop==0):########### main loop begin
+stepNumber = -1; # increment at the start so move to 0 during first iteration
+Nii = np.zeros(NSteps)
+while (not stop):########### main loop begin
     stepNumber+=1
-    
+    print(stepNumber)
     aut.evolve()
     aut.show(str(stepNumber))
-    stop=stepNumber>=20
+    stop=stepNumber>=NSteps-1 # stops AFTER this run, so -1
 #    if (run==1) 
     #labelling
 #        stepnumber = 1 + str2num(get(number1,'string'));# photonic excited at a certain matrix
-#        set(number1,'string',num2str(stepnumber)); a=stepnumber-1;
+#        set(number1,'string',num2str(stepnumber)); 
+         #a=stepnumber-1;
 #        
     #Laser excitation 
-#        Nii(a)=N0*exp(-2.7726*tim*(timestep*a/tao-1)^2); 
+    Nii[stepNumber] = N0*exp(-2.7726*tim*(timestep*stepNumber/tao-1)**2); 
 #        
 #        if(a>Ontime)
 #            Nii(a)=0; end
@@ -488,10 +492,7 @@ while (stop==0):########### main loop begin
 #    
 #    # end
 #    
-#
-#
-#
-#
-#
-#
-#
+plt.figure(2)
+plt.plot(Nii)
+plt.show()
+

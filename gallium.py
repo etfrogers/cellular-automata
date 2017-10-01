@@ -88,6 +88,7 @@ else:
 
 
 aut = Automata([m,n], [ground, meta, excited])
+aut.doPause = False
 #
 #figure(1)
 #plotbutton=uicontrol('style','pushbutton','string','Run','fontsize',12, 'position',[100,400,50,20], 'callback', 'run=1;'); #define the run,stop,quit and number button

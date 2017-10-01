@@ -22,6 +22,7 @@ class Automata:
         self.rules = []
         self._figHandle = None
         self._imHandle = None
+        self.doPause = True
         
     def addRule(self, rule):
         self.rules.append(rule)
@@ -47,7 +48,8 @@ class Automata:
             self._imHandle.set_array(self.layout)            
         plt.title(label)
         plt.draw()
-        plt.pause(0.001)
+        if self.doPause:
+            plt.pause(0.001)
         
     def randomise(self):
         self.layout = np.random.choice(self.states, self.layout.shape)

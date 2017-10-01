@@ -113,7 +113,7 @@ time = timestep*np.array(range(0,NSteps))
 LaserIntensity = N0*np.exp(-2.7726*tim*(time/tao-1)**2)
 
 #imagesc(cells); xlabel('Cells','fontsize',13),ylabel('Cells','fontsize',13);set(gca,'FontSize',12);
-stop = False; run = 0; freeze = 0; k=1; auxiliar=0;
+stop = False; run = 0; freeze = 0; k=1; 
 run = 1;
 stepNumber = -1; # increment at the start so move to 0 during first iteration
 while (not stop):########### main loop begin
@@ -136,7 +136,7 @@ while (not stop):########### main loop begin
 #        
 #        ################### below from ground photoinduced to exicted
 #        m0=1:m;
-#        if (auxiliar ~= 0)
+#        if (stepNumber == 0):
 #            Ni=LaserIntensity(a).*exp(-gao*(m0-m/2).^2./M.^2).* Ab;      
 #        else
 #            Ni=LaserIntensity(a).*exp(-gao*(m0-m/2).^2./M.^2)* absorb ;     
@@ -479,9 +479,7 @@ while (not stop):########### main loop begin
 #        
 #        #     if(a==Tao-1)
 #        #       freeze=1; end
-#        
-#        auxiliar=1; ### used to judy the Ab
-#       
+#               
 #    else
 #        pause(0.25);
 #    end

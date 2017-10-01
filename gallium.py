@@ -106,14 +106,16 @@ aut.show('Initial State')
 aut.addRule(Rule(sFrom=meta,sTo=ground,sNb=[meta,excited],N=[0, detN21],prob=decay2121))
 aut.addRule(Rule(sFrom=ground, sTo=meta, sNb=[meta,excited], N=[detN12,aut.maxNbours])) #always happens if enough neighbours
 aut.addRule(Rule(sFrom=ground, sTo=meta, sNb=[meta,excited], N=[N1212,detN12], prob=raise12)) #stocahstically happens if only some neighbours
+                 
+NSteps = 200
 
-NSteps = 100
+time = timestep*np.array(range(0,NSteps))
+Nii = N0*np.exp(-2.7726*tim*(time/tao-1)**2)
 
 #imagesc(cells); xlabel('Cells','fontsize',13),ylabel('Cells','fontsize',13);set(gca,'FontSize',12);
 stop = False; run = 0; freeze = 0; k=1; auxiliar=0;
 run = 1;
 stepNumber = -1; # increment at the start so move to 0 during first iteration
-Nii = np.zeros(NSteps)
 while (not stop):########### main loop begin
     stepNumber+=1
     print(stepNumber)
@@ -127,7 +129,7 @@ while (not stop):########### main loop begin
          #a=stepnumber-1;
 #        
     #Laser excitation 
-    Nii[stepNumber] = N0*exp(-2.7726*tim*(timestep*stepNumber/tao-1)**2); 
+     
 #        
 #        if(a>Ontime)
 #            Nii(a)=0; end
@@ -493,6 +495,6 @@ while (not stop):########### main loop begin
 #    # end
 #    
 plt.figure(2)
-plt.plot(Nii)
+plt.plot(time, Nii)
 plt.show()
 

@@ -112,6 +112,7 @@ NSteps = 200
 
 time = timestep*np.array(range(0,NSteps))
 LaserIntensity = N0*np.exp(-2.7726*tim*(time/tao-1)**2)
+LaserIntensity[time>Ontime] = 0
 
 #imagesc(cells); xlabel('Cells','fontsize',13),ylabel('Cells','fontsize',13);set(gca,'FontSize',12);
 stop = False; run = 0; freeze = 0; k=1; 
@@ -132,8 +133,6 @@ while (not stop):########### main loop begin
     #Laser excitation 
      
 #        
-#        if(a>Ontime)
-#            LaserIntensity(a)=0; end
 #        
 #        ################### below from ground photoinduced to exicted
 #        m0=1:m;

@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 plt.ion()
 class Automata:
     
-    #variables defined here at static
+    #variables defined here are static
     nhood = np.array([[1,1,1],[1,0,1],[1,1,1]])
     
     def __init__(self, size, states):
@@ -51,3 +51,10 @@ class Automata:
         
     def randomise(self):
         self.layout = np.random.choice(self.states, self.layout.shape)
+        
+    @property 
+    def maxNbours(self):
+        return np.sum(np.sum(self.nhood))
+
+    
+    

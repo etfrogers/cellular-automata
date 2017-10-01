@@ -30,6 +30,8 @@ class Rule:
         # refState is the state of the layout at the start of the timestep and 
         # should be used to calculate which changes to make
         
+        #may need to add wrapping
+        
         fromVals = reduce(np.logical_or, [refState == st for st in self.stateNbours]) 
         nbours = signal.convolve(fromVals.astype(int), nhood, 'same')
         #print(refState)

@@ -110,7 +110,7 @@ aut.addRule(Rule(sFrom=ground, sTo=meta, sNb=[meta,excited], N=[N1212,detN12], p
 NSteps = 200
 
 time = timestep*np.array(range(0,NSteps))
-Nii = N0*np.exp(-2.7726*tim*(time/tao-1)**2)
+LaserIntensity = N0*np.exp(-2.7726*tim*(time/tao-1)**2)
 
 #imagesc(cells); xlabel('Cells','fontsize',13),ylabel('Cells','fontsize',13);set(gca,'FontSize',12);
 stop = False; run = 0; freeze = 0; k=1; auxiliar=0;
@@ -132,14 +132,14 @@ while (not stop):########### main loop begin
      
 #        
 #        if(a>Ontime)
-#            Nii(a)=0; end
+#            LaserIntensity(a)=0; end
 #        
 #        ################### below from ground photoinduced to exicted
 #        m0=1:m;
 #        if (auxiliar ~= 0)
-#            Ni=Nii(a).*exp(-gao*(m0-m/2).^2./M.^2).* Ab;      
+#            Ni=LaserIntensity(a).*exp(-gao*(m0-m/2).^2./M.^2).* Ab;      
 #        else
-#            Ni=Nii(a).*exp(-gao*(m0-m/2).^2./M.^2)* absorb ;     
+#            Ni=LaserIntensity(a).*exp(-gao*(m0-m/2).^2./M.^2)* absorb ;     
 #        end
 #        
 #        proo=rand(size(m0));  #####
@@ -495,6 +495,6 @@ while (not stop):########### main loop begin
 #    # end
 #    
 plt.figure(2)
-plt.plot(time, Nii)
+plt.plot(time, LaserIntensity)
 plt.show()
 

@@ -98,12 +98,14 @@ else:
 
 N0=power/h/f0*timestep*(lattice)**2 #general photonic number per timestep at a certain row i
 
-
-nrload = readnfile('n_poly.txt','\t');krload = readnfile('k_poly.txt','\t');   # Load Ga refractive indices and select at relevant wavelength
+# Load Ga refractive indices and select at relevant wavelength
+nrload = readnfile('n_poly.txt','\t');krload = readnfile('k_poly.txt','\t');   
 nSol = np.interp(lambda0, nrload[:,0],nrload[:,1]) + 1j*np.interp(lambda0, krload[:,0],krload[:,1])
 nrload2 = readnfile('n_liq.txt','\t');krload2 = readnfile('k_liq.txt','\t');
 nLiq = np.interp(lambda0, nrload2[:,0],nrload2[:,1]) + 1j*np.interp(lambda0, krload2[:,0],krload2[:,1])
-es = nSol*nSol;    el =nLiq*nLiq;   ks=nSol*2*pi*f0/c;  kl=nLiq*2*pi*f0/c; Ls=1/np.imag(ks);   LL=1/np.imag(kl);  #pennetration depth come from the wave vector
+es = nSol*nSol;    el =nLiq*nLiq;   
+ks=nSol*2*pi*f0/c;  kl=nLiq*2*pi*f0/c; 
+Ls=1/np.imag(ks);   LL=1/np.imag(kl);  #pennetration depth come from the wave vector
 abp1=2*lattice/Ls;# cell absorption rate for a photon
 #
 if (absorption_style == 'small'):

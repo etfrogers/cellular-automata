@@ -28,7 +28,11 @@ class Automata:
     def add_rule(self, rule):
         self.rules.append(rule)
 
-    def evolve(self):
+    def evolve(self, n=1):
+        for _ in range(n):
+            self._evolve()
+
+    def _evolve(self):
         old_state = self.layout
         new_state = np.copy(old_state)
 
